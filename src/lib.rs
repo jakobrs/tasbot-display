@@ -3,7 +3,7 @@ use std::ops::{Index, IndexMut};
 use image::Rgb;
 use rppal::spi::{Bus, Mode, SlaveSelect, Spi};
 
-type RgbColor = Rgb<u8>;
+pub type RgbColor = Rgb<u8>;
 pub struct NeoPixelDevice {
     buffer: Vec<u8>,
     spi: Spi,
