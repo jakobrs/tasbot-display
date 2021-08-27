@@ -72,7 +72,6 @@ impl Display {
 
     pub fn draw(&mut self) {
         self.device.set_pixels(&self.buffer[..]);
-        self.device.write();
     }
 }
 impl Index<usize> for Display {
