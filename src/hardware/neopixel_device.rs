@@ -25,6 +25,14 @@ impl NeoPixelDevice {
     }
 
     fn write(&mut self) {
+        unsafe {
+            static mut HAS_DRAWN_BEFORE: bool = false;
+            if HAS_DRAWN_BEFORE {
+                panic!("Attemted to call write() twice, refusing");
+            }
+            HAS_DRAWN_BEFORE = true;
+        }
+
         let buffer_spi: Vec<u8> = self
             .buffer
             .drain(..)
