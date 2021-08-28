@@ -4,6 +4,7 @@ use image::Rgb;
 use rppal::spi::{Bus, Mode, SlaveSelect, Spi};
 
 pub type RgbColor = Rgb<u8>;
+
 pub struct NeoPixelDevice {
     buffer: Vec<u8>,
     spi: Spi,
@@ -59,14 +60,18 @@ pub struct Display {
 
 impl Display {
     pub fn new(num_lights: u32) -> Self {
+        let black = RgbColor::from([0, 0, 0]);
+
         Self {
             device: NeoPixelDevice::new(num_lights),
-            buffer: Vec::with_capacity(num_lights as usize),
+            buffer: vec![black; num_lights as usize],
         }
     }
     pub fn wrap(device: NeoPixelDevice) -> Self {
+        let black = RgbColor::from([0, 0, 0]);
+
         Self {
-            buffer: Vec::with_capacity(device.num_lights as usize),
+            buffer: vec![black; device.num_lights as usize],
             device,
         }
     }
