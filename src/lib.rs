@@ -39,7 +39,7 @@ impl NeoPixelDevice {
 
     pub fn clear(&mut self) {
         self.buffer.clear();
-        self.buffer.extend(&vec![0; self.num_lights as usize]);
+        self.buffer.extend(&vec![0; (self.num_lights * 3) as usize]);
         self.write();
     }
 
@@ -74,6 +74,10 @@ impl Display {
             buffer: vec![black; device.num_lights as usize],
             device,
         }
+    }
+
+    pub fn device(&mut self) -> &mut NeoPixelDevice {
+        &mut self.device
     }
 
     pub fn draw(&mut self) {
