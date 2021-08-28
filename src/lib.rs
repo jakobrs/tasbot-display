@@ -44,6 +44,7 @@ impl NeoPixelDevice {
     }
 
     pub fn set_pixels(&mut self, pixels: &[RgbColor]) {
+        self.buffer.clear();
         self.buffer.extend(
             pixels
                 .iter()
