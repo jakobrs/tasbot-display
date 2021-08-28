@@ -2,8 +2,17 @@ use image::io::Reader as ImageReader;
 use tasbot_display::tasbot::{NUM_PIXELS, PIXEL_POSITIONS};
 use tasbot_display::Display;
 
+use structopt::StructOpt;
+
+#[derive(StructOpt)]
+struct Opts {
+    file: String,
+}
+
 fn main() {
-    let image = ImageReader::open("./a.png")
+    let args = Opts::from_args();
+
+    let image = ImageReader::open(&args.file)
         .unwrap()
         .decode()
         .unwrap()
