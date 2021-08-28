@@ -120,3 +120,38 @@ fn eight_bools_to_byte(bools: &[bool]) -> u8 {
     }
     n
 }
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn eight_bools_to_byte_works() {
+        use crate::*;
+
+        assert_eq!(
+            eight_bools_to_byte(&[false, false, false, false, false, false, false, false]),
+            0b0000_0000
+        );
+        assert_eq!(
+            eight_bools_to_byte(&[true, false, false, false, false, false, false, false]),
+            0b1000_0000
+        );
+        assert_eq!(
+            eight_bools_to_byte(&[false, true, false, false, false, false, false, false]),
+            0b0100_0000
+        );
+        assert_eq!(
+            eight_bools_to_byte(&[false, true, false, false, true, false, false, false]),
+            0b0100_1000
+        );
+    }
+
+    #[test]
+    fn convert_to_spi_format_works() {
+        use crate::*;
+
+        assert_eq!(
+            convert_to_spi_format(0b1000_1010),
+            [0b1101_0010, 0b0100_1101, 0b0011_0100]
+        );
+    }
+}
