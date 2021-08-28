@@ -1,6 +1,5 @@
 use tasbot_display::Display;
-
-const NUM_PIXELS: u32 = 24;
+use tasbot_display::tasbot::NUM_PIXELS;
 
 fn main() {
     let mut display = Display::new(NUM_PIXELS);
