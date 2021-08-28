@@ -16,6 +16,7 @@ impl NeoPixelDevice {
         let slave_select = SlaveSelect::Ss0;
         let clock_speed = 3 * 1000 * 1000;
         let mode = Mode::Mode0;
+
         let spi = Spi::new(bus, slave_select, clock_speed, mode).unwrap();
 
         Self {
