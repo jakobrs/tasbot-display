@@ -94,13 +94,15 @@ impl IndexMut<usize> for Display {
 }
 
 fn convert_to_spi_format(byte: u8) -> [u8; 3] {
-    let bools: Vec<bool> = (0..8).flat_map(|n| {
-        if byte & (1 << (8 - n)) > 0 {
-            [true, true, false]
-        } else {
-            [true, false, false]
-        }
-    }).collect();
+    let bools: Vec<bool> = (0..8)
+        .flat_map(|n| {
+            if byte & (1 << (7 - n)) > 0 {
+                [true, true, false]
+            } else {
+                [true, false, false]
+            }
+        })
+        .collect();
 
     [
         eight_bools_to_byte(&bools[0..8]),
@@ -113,7 +115,7 @@ fn eight_bools_to_byte(bools: &[bool]) -> u8 {
     let mut n = 0;
     for (position, bit) in bools.iter().enumerate() {
         if *bit {
-            n |= 1 << (8 - position);
+            n |= 1 << (7 - position);
         }
     }
     n
