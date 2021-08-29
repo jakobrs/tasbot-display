@@ -14,5 +14,6 @@ Experiment in handling the TASBot display from Rust
   - `examples/fill.rs` fills the screen with green
   - `examples/clear.rs` clears the screen
   - `examples/flashes.rs` fills the screen with red, waits, fills the screen with green, waits, in a loop
+  - `examples/dot.rs` shows a moving dot on the screen (for the NeoPixel Ring with 24 LEDs)
 
 Most programs support arguments; pass `--help` for a list of supported arguments. `--brightness`, in particular, should be available for any command which draws non-black pixels.
