@@ -1,5 +1,5 @@
-use tasbot_display::{Display, RgbColor};
 use tasbot_display::tasbot::NUM_PIXELS;
+use tasbot_display::{Display, RgbColor};
 
 use structopt::StructOpt;
 

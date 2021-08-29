@@ -35,7 +35,10 @@ impl Display {
 
     pub fn set_brightness(&mut self, brightness: f32) {
         if brightness > MAX_BRIGHTNESS {
-            panic!("Attempted to set brightness to {}, above MAX_BRIGHTNESS of {}", brightness, MAX_BRIGHTNESS);
+            panic!(
+                "Attempted to set brightness to {}, above MAX_BRIGHTNESS of {}",
+                brightness, MAX_BRIGHTNESS
+            );
         }
 
         self.brightness = brightness;
