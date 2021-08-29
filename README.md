@@ -17,3 +17,7 @@ Experiment in handling the TASBot display from Rust
   - `examples/dot.rs` shows a moving dot on the screen (for the NeoPixel Ring with 24 LEDs)
 
 Most programs support arguments; pass `--help` for a list of supported arguments. `--brightness`, in particular, should be available for any command which draws non-black pixels.
+
+### Some notes
+
+The brightness is by default capped at 10%. To increase the default brightness, change the definition of `MAX_BRIGHTNESS` in `src/hardware/display.rs`.
