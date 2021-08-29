@@ -21,7 +21,7 @@ struct Opts {
     gif: bool,
 
     #[structopt(long, default_value = "1", help = "Divides delay between frames by <speedup>")]
-    speedup: u32,
+    speedup: f32,
 }
 
 fn main() {
@@ -57,7 +57,7 @@ fn main() {
                 draw_image(&mut display, image);
 
                 let (numer, denom) = frame.delay().numer_denom_ms();
-                let duration = Duration::from_millis(numer as u64) / denom / opts.speedup;
+                let duration = Duration::from_millis(numer as u64).div_f32(opts.speedup) / denom;
 
                 std::thread::sleep(duration);
             }
