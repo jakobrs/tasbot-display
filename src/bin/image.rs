@@ -19,8 +19,8 @@ struct Opts {
     #[structopt(long)]
     gif: bool,
 
-    #[structopt(long, default_value = "500")]
-    speed: u64,
+    #[structopt(long, default_value = "1")]
+    speedup: u32,
 }
 
 fn main() {
@@ -36,6 +36,7 @@ fn main() {
         let file = File::open(&opts.file).unwrap();
         let decoder = GifDecoder::new(file).unwrap();
 
+        // Takes each frame, converts the buffer to an RgbImage, and collects the result.
         let frames: Vec<(Frame, RgbImage)> = decoder
             .into_frames()
             .map(|frame| {
@@ -54,7 +55,10 @@ fn main() {
             for (frame, image) in frames.iter() {
                 draw_image(&mut display, image);
 
-                std::thread::sleep(Duration::from_millis(opts.speed));
+                let (numer, denom) = frame.delay().numer_denom_ms();
+                let duration = Duration::from_millis(numer as u64) / denom / opts.speedup;
+
+                std::thread::sleep(duration);
             }
         }
     } else {
