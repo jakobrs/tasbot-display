@@ -39,8 +39,7 @@ impl NeoPixelDevice {
 
     pub fn clear(&mut self) {
         self.buffer.clear();
-        self.buffer
-            .extend(&vec![0; self.num_lights as usize * BITS_PER_BIT]);
+        self.buffer.extend(&vec![0; self.num_lights as usize * 3]);
         self.write();
     }
 
