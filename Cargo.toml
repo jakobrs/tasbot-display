@@ -12,3 +12,6 @@ lto = true
 image = "0.23.14"
 rppal = "0.12.0"
 structopt = "0.3.22"
+
+[features]
+dont-cap-brightness = []

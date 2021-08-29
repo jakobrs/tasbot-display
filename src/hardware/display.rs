@@ -3,8 +3,8 @@ use std::ops::{Index, IndexMut};
 use crate::hardware::neopixel_device::NeoPixelDevice;
 use crate::RgbColor;
 
-const MAX_BRIGHTNESS: f32 = 0.1;
-const DEFAULT_BRIGHTNESS: f32 = MAX_BRIGHTNESS;
+const MAX_BRIGHTNESS: f32 = if cfg!(dont_cap_brightness) { 1. } else { 0.1 };
+const DEFAULT_BRIGHTNESS: f32 = 0.1;
 
 pub struct Display {
     device: NeoPixelDevice,
