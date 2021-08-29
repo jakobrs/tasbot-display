@@ -76,7 +76,7 @@ fn draw_image(display: &mut Display, image: &RgbImage) -> () {
     for (x, y, &color) in image.enumerate_pixels() {
         let x = x as usize;
         let y = y as usize;
-        if x > SCREEN_WIDTH || y > SCREEN_HEIGHT {
+        if x >= SCREEN_WIDTH || y >= SCREEN_HEIGHT {
             continue;
         }
 
