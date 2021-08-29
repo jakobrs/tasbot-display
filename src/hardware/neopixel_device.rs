@@ -2,6 +2,8 @@ use crate::RgbColor;
 
 use rppal::spi::{Bus, Mode, SlaveSelect, Spi};
 
+const BITS_PER_BIT: usize = 8;
+
 pub struct NeoPixelDevice {
     buffer: Vec<u8>,
     spi: Spi,
@@ -12,7 +14,8 @@ impl NeoPixelDevice {
     pub fn new(num_lights: u32) -> Self {
         let bus = Bus::Spi0;
         let slave_select = SlaveSelect::Ss0;
-        let clock_speed = 3 * 1000 * 1000;
+        //let clock_speed = 3 * 1000 * 1000;
+        let clock_speed = 6_400_000;
         let mode = Mode::Mode0;
 
         let spi = Spi::new(bus, slave_select, clock_speed, mode).unwrap();
@@ -25,14 +28,6 @@ impl NeoPixelDevice {
     }
 
     fn write(&mut self) {
-        unsafe {
-            static mut HAS_DRAWN_BEFORE: bool = false;
-            if HAS_DRAWN_BEFORE {
-                panic!("Attemted to call write() twice, refusing");
-            }
-            HAS_DRAWN_BEFORE = true;
-        }
-
         let buffer_spi: Vec<u8> = self
             .buffer
             .drain(..)
@@ -60,13 +55,13 @@ impl NeoPixelDevice {
     }
 }
 
-fn convert_to_spi_format(byte: u8) -> [u8; 3] {
+fn convert_to_spi_format(byte: u8) -> [u8; BITS_PER_BIT] {
     let bools: Vec<bool> = (0..8)
         .flat_map(|n| {
             if byte & (1 << (7 - n)) > 0 {
-                [true, true, false]
+                [true, true, true, true, false, false, false, false]
             } else {
-                [true, false, false]
+                [true, false, false, false, false, false, false, false]
             }
         })
         .collect();
@@ -75,6 +70,11 @@ fn convert_to_spi_format(byte: u8) -> [u8; 3] {
         eight_bools_to_byte(&bools[0..8]),
         eight_bools_to_byte(&bools[8..16]),
         eight_bools_to_byte(&bools[16..24]),
+        eight_bools_to_byte(&bools[24..32]),
+        eight_bools_to_byte(&bools[32..40]),
+        eight_bools_to_byte(&bools[40..48]),
+        eight_bools_to_byte(&bools[48..56]),
+        eight_bools_to_byte(&bools[56..64]),
     ]
 }
 
