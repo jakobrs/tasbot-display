@@ -3,7 +3,8 @@ use std::ops::{Index, IndexMut};
 use crate::hardware::neopixel_device::NeoPixelDevice;
 use crate::RgbColor;
 
-const DEFAULT_BRIGHTNESS: f32 = 0.01;
+const MAX_BRIGHTNESS: f32 = 0.1;
+const DEFAULT_BRIGHTNESS: f32 = MAX_BRIGHTNESS;
 
 pub struct Display {
     device: NeoPixelDevice,
@@ -33,8 +34,8 @@ impl Display {
     }
 
     pub fn set_brightness(&mut self, brightness: f32) {
-        if brightness > DEFAULT_BRIGHTNESS {
-            panic!("Attempted to set brightness above DEFAULT_BRIGHTNESS");
+        if brightness > MAX_BRIGHTNESS {
+            panic!("Attempted to set brightness to {}, above MAX_BRIGHTNESS of {}", brightness, MAX_BRIGHTNESS);
         }
 
         self.brightness = brightness;
