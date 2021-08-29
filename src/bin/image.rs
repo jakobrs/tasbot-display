@@ -4,7 +4,7 @@ use std::time::Duration;
 use image::gif::GifDecoder;
 use image::io::Reader as ImageReader;
 use image::{AnimationDecoder, DynamicImage, Frame, ImageError, RgbImage};
-use tasbot_display::tasbot::{NUM_PIXELS, PIXEL_POSITIONS};
+use tasbot_display::tasbot::{NUM_PIXELS, PIXEL_POSITIONS, SCREEN_HEIGHT, SCREEN_WIDTH};
 use tasbot_display::Display;
 
 use structopt::StructOpt;
@@ -74,7 +74,13 @@ fn main() {
 
 fn draw_image(display: &mut Display, image: &RgbImage) -> () {
     for (x, y, &color) in image.enumerate_pixels() {
-        if let Some(i) = PIXEL_POSITIONS[y as usize][x as usize] {
+        let x = x as usize;
+        let y = y as usize;
+        if x > SCREEN_WIDTH || y > SCREEN_HEIGHT {
+            continue;
+        }
+
+        if let Some(i) = PIXEL_POSITIONS[y][x] {
             display[i] = color;
         }
     }
