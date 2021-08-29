@@ -7,6 +7,9 @@ use structopt::StructOpt;
 #[derive(StructOpt)]
 struct Opts {
     file: String,
+
+    #[structopt(long)]
+    brightness: Option<f32>,
 }
 
 fn main() {
@@ -19,6 +22,10 @@ fn main() {
         .to_rgb8();
 
     let mut display = Display::new(NUM_PIXELS);
+
+    if let Some(brightness) = opts.brightness {
+        display.set_brightness(brightness);
+    }
 
     for (x, y, &color) in image.enumerate_pixels() {
         if let Some(i) = PIXEL_POSITIONS[y as usize][x as usize] {

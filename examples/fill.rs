@@ -12,6 +12,9 @@ struct Opts {
     green: u8,
     #[structopt(short, long, default_value = "0")]
     blue: u8,
+
+    #[structopt(long)]
+    brightness: Option<f32>,
 }
 
 fn main() {
@@ -19,6 +22,10 @@ fn main() {
     let color = RgbColor::from([opts.red, opts.green, opts.blue]);
 
     let mut display = Display::new(NUM_PIXELS);
+
+    if let Some(brightness) = opts.brightness {
+        display.set_brightness(brightness);
+    }
 
     for i in 0..NUM_PIXELS {
         display[i as usize] = color;
