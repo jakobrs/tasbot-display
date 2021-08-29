@@ -13,9 +13,9 @@ struct Opts {
 }
 
 fn main() {
-    let args = Opts::from_args();
+    let opts = Opts::from_args();
 
-    let image = ImageReader::open(&args.file)
+    let image = ImageReader::open(&opts.file)
         .unwrap()
         .decode()
         .unwrap()
