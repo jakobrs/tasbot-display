@@ -111,13 +111,13 @@ mod tests {
         );
     }
 
-    #[test]
-    fn convert_to_spi_format_works() {
-        use super::*;
+    // #[test]
+    // fn convert_to_spi_format_works() {
+    //     use super::*;
 
-        assert_eq!(
-            convert_to_spi_format(0b1000_1010),
-            [0b1101_0010, 0b0100_1101, 0b0011_0100]
-        );
-    }
+    //     assert_eq!(
+    //         convert_to_spi_format(0b1000_1010),
+    //         [0b1101_0010, 0b0100_1101, 0b0011_0100]
+    //     );
+    // }
 }
