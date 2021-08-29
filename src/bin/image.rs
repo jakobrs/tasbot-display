@@ -11,15 +11,16 @@ use structopt::StructOpt;
 
 #[derive(StructOpt)]
 struct Opts {
+    #[structopt(help = "Path to the image file")]
     file: String,
 
-    #[structopt(long)]
+    #[structopt(long, help = "Brightness")]
     brightness: Option<f32>,
 
-    #[structopt(long)]
+    #[structopt(long, help = "Enable if the image is a gif")]
     gif: bool,
 
-    #[structopt(long, default_value = "1")]
+    #[structopt(long, default_value = "1", help = "Divides delay between frames by <speedup>")]
     speedup: u32,
 }
 
