@@ -20,4 +20,4 @@ Most programs support arguments; pass `--help` for a list of supported arguments
 
 ### Some notes
 
-The brightness is by default capped at 10%. To increase the default brightness, change the definition of `MAX_BRIGHTNESS` in `src/hardware/display.rs`.
+The brightness is by default capped at 10%. To increase the default brightness, change the definition of `MAX_BRIGHTNESS` in `src/hardware/display.rs`. You can disable the cap completely using `--features dont-cap-brightness`
