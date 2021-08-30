@@ -5,7 +5,10 @@ rm out/*
 
 cp -p target/arm-unknown-linux-musleabihf/$1/{image,examples/{fill,clear,flashes,dot}} out/
 
-armv7l-unknown-linux-gnueabihf-strip out/*
+cmd=armv7l-unknown-linux-gnueabihf-strip
+command -v "$cmd" >/dev/null || cmd=arm-linux-gnueabihf-strip
+
+"$cmd" out/*
 
 cd out
 tar -czv * -f ../$1$2.tar.gz
