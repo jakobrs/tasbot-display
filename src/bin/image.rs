@@ -22,6 +22,9 @@ struct Opts {
 
     #[structopt(long, default_value = "1", help = "Divides delay between frames by <speedup>")]
     speedup: f32,
+
+    #[structopt(long, help = "Don't loop the gif")]
+    noloop: bool,
 }
 
 fn main() {
@@ -60,6 +63,10 @@ fn main() {
                 let duration = Duration::from_millis(numer as u64).div_f32(opts.speedup) / denom;
 
                 std::thread::sleep(duration);
+            }
+
+            if opts.noloop {
+                break;
             }
         }
     } else {
