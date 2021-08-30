@@ -1,1 +1,4 @@
 /target
+/out
+/release.tar.gz
+/debug.tar.gz
