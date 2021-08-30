@@ -21,25 +21,20 @@ impl NeoPixelDevice {
         let spi = Spi::new(bus, slave_select, clock_speed, mode).unwrap();
 
         Self {
-            buffer: vec![],
+            buffer: vec![ZERO_BIT_PATTERN; num_lights as usize * 24],
             spi,
             num_lights,
         }
     }
 
-    fn write(&mut self) {
-        let buffer_spi: Vec<u8> = self
-            .buffer
-            .drain(..)
-            .flat_map(convert_to_spi_format)
-            .collect();
-
-        self.spi.write(&buffer_spi[..]).unwrap();
+    pub fn write(&mut self) {
+        self.spi.write(&self.buffer[..]).unwrap();
     }
 
     pub fn clear(&mut self) {
         self.buffer.clear();
-        self.buffer.extend(&vec![0; self.num_lights as usize * 3]);
+        self.buffer
+            .extend(&vec![ZERO_BIT_PATTERN; self.num_lights as usize * 3]);
         self.write();
     }
 
@@ -48,9 +43,20 @@ impl NeoPixelDevice {
         self.buffer.extend(
             pixels
                 .iter()
-                .flat_map(|color| [color[1], color[0], color[2]]),
+                .flat_map(|color| [color[1], color[0], color[2]])
+                .flat_map(convert_to_spi_format),
         );
         self.write();
+    }
+
+    pub fn set_pixel(&mut self, index: usize, color: RgbColor) {
+        let index_in_buffer = index * 24;
+        self.buffer[index_in_buffer..index_in_buffer + 8]
+            .copy_from_slice(&convert_to_spi_format(color[1]));
+        self.buffer[index_in_buffer + 8..index_in_buffer + 16]
+            .copy_from_slice(&convert_to_spi_format(color[0]));
+        self.buffer[index_in_buffer + 16..index_in_buffer + 24]
+            .copy_from_slice(&convert_to_spi_format(color[2]));
     }
 }
 

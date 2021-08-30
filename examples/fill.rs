@@ -28,7 +28,7 @@ fn main() {
     }
 
     for i in 0..NUM_PIXELS {
-        display[i as usize] = color;
+        display.set_pixel(i as usize, color);
     }
 
     display.draw();

@@ -1,4 +1,4 @@
-use std::ops::{Index, IndexMut};
+use std::ops::Index;
 
 use crate::hardware::neopixel_device::NeoPixelDevice;
 use crate::RgbColor;
@@ -42,6 +42,10 @@ impl Display {
         }
 
         self.brightness = brightness;
+
+        for (index, &color) in self.buffer.iter().enumerate() {
+            self.device.set_pixel(index, scale_color(color, brightness));
+        }
     }
 
     pub fn device(&mut self) -> &mut NeoPixelDevice {
@@ -49,12 +53,17 @@ impl Display {
     }
 
     pub fn draw(&mut self) {
-        let buffer_post_brightness: Vec<RgbColor> = self
-            .buffer
-            .iter()
-            .map(|pixel| scale_color(pixel, self.brightness))
-            .collect();
-        self.device.set_pixels(&buffer_post_brightness[..]);
+        self.device.write();
+    }
+
+    pub fn get_pixel(&self, index: usize) -> RgbColor {
+        self.buffer[index]
+    }
+
+    pub fn set_pixel(&mut self, index: usize, color: RgbColor) {
+        self.buffer[index] = color;
+        self.device
+            .set_pixel(index, scale_color(color, self.brightness));
     }
 }
 impl Index<usize> for Display {
@@ -64,16 +73,11 @@ impl Index<usize> for Display {
         &self.buffer[index]
     }
 }
-impl IndexMut<usize> for Display {
-    fn index_mut(&mut self, index: usize) -> &mut RgbColor {
-        &mut self.buffer[index]
-    }
-}
 
-fn scale_color(pixel: &RgbColor, scale: f32) -> RgbColor {
+fn scale_color(color: RgbColor, scale: f32) -> RgbColor {
     RgbColor::from([
-        ((pixel[0] as f32) * scale) as u8,
-        ((pixel[1] as f32) * scale) as u8,
-        ((pixel[2] as f32) * scale) as u8,
+        ((color[0] as f32) * scale) as u8,
+        ((color[1] as f32) * scale) as u8,
+        ((color[2] as f32) * scale) as u8,
     ])
 }

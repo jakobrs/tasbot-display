@@ -93,7 +93,7 @@ fn draw_image(display: &mut Display, image: &RgbImage) {
         }
 
         if let Some(i) = PIXEL_POSITIONS[y][x] {
-            display[i] = color;
+            display.set_pixel(i, color);
         }
     }
 

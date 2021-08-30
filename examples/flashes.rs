@@ -34,14 +34,14 @@ fn main() {
     loop {
         println!("red");
         for i in 0..NUM_PIXELS {
-            display[i as usize] = red;
+            display.set_pixel(i as usize, red);
         }
         display.draw();
         thread::sleep(Duration::from_millis(opts.delay));
 
         println!("green");
         for i in 0..NUM_PIXELS {
-            display[i as usize] = green;
+            display.set_pixel(i as usize, green);
         }
         display.draw();
         thread::sleep(Duration::from_millis(opts.delay));

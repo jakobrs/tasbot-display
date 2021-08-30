@@ -41,8 +41,8 @@ fn main() {
 
     loop {
         for i in 0..NUM_PIXELS {
-            display[i as usize] = black;
-            display[((i + 1) % 24) as usize] = color;
+            display.set_pixel(i as usize, black);
+            display.set_pixel(((i + 1) % 24) as usize, color);
 
             display.draw();
 
