@@ -54,70 +54,48 @@ impl NeoPixelDevice {
     }
 }
 
+const ZERO_BIT_PATTERN: u8 = 0b1000_0000;
+const ONE_BIT_PATTERN: u8 = 0b1111_0000;
+
 fn convert_to_spi_format(byte: u8) -> [u8; BITS_PER_BIT] {
-    let bools: Vec<bool> = (0..8)
-        .flat_map(|n| {
-            if byte & (1 << (7 - n)) > 0 {
-                [true, true, true, true, false, false, false, false]
-            } else {
-                [true, false, false, false, false, false, false, false]
-            }
-        })
-        .collect();
-
-    [
-        eight_bools_to_byte(&bools[0..8]),
-        eight_bools_to_byte(&bools[8..16]),
-        eight_bools_to_byte(&bools[16..24]),
-        eight_bools_to_byte(&bools[24..32]),
-        eight_bools_to_byte(&bools[32..40]),
-        eight_bools_to_byte(&bools[40..48]),
-        eight_bools_to_byte(&bools[48..56]),
-        eight_bools_to_byte(&bools[56..64]),
-    ]
-}
-
-fn eight_bools_to_byte(bools: &[bool]) -> u8 {
-    let mut n = 0;
-    for (position, bit) in bools.iter().enumerate() {
-        if *bit {
-            n |= 1 << (7 - position);
+    fn bit_to_spi_byte(byte: u8, bit: u8) -> u8 {
+        if byte & (1 << (7 - bit)) > 0 {
+            ONE_BIT_PATTERN
+        } else {
+            ZERO_BIT_PATTERN
         }
     }
-    n
+
+    [
+        bit_to_spi_byte(byte, 0),
+        bit_to_spi_byte(byte, 1),
+        bit_to_spi_byte(byte, 2),
+        bit_to_spi_byte(byte, 3),
+        bit_to_spi_byte(byte, 4),
+        bit_to_spi_byte(byte, 5),
+        bit_to_spi_byte(byte, 6),
+        bit_to_spi_byte(byte, 7),
+    ]
 }
 
 #[cfg(test)]
 mod tests {
     #[test]
-    fn eight_bools_to_byte_works() {
+    fn convert_to_spi_format_works() {
         use super::*;
 
         assert_eq!(
-            eight_bools_to_byte(&[false, false, false, false, false, false, false, false]),
-            0b0000_0000
-        );
-        assert_eq!(
-            eight_bools_to_byte(&[true, false, false, false, false, false, false, false]),
-            0b1000_0000
-        );
-        assert_eq!(
-            eight_bools_to_byte(&[false, true, false, false, false, false, false, false]),
-            0b0100_0000
-        );
-        assert_eq!(
-            eight_bools_to_byte(&[false, true, false, false, true, false, false, false]),
-            0b0100_1000
+            convert_to_spi_format(0b1000_1010),
+            [
+                ONE_BIT_PATTERN,
+                ZERO_BIT_PATTERN,
+                ZERO_BIT_PATTERN,
+                ZERO_BIT_PATTERN,
+                ONE_BIT_PATTERN,
+                ZERO_BIT_PATTERN,
+                ONE_BIT_PATTERN,
+                ZERO_BIT_PATTERN,
+            ]
         );
     }
-
-    // #[test]
-    // fn convert_to_spi_format_works() {
-    //     use super::*;
-
-    //     assert_eq!(
-    //         convert_to_spi_format(0b1000_1010),
-    //         [0b1101_0010, 0b0100_1101, 0b0011_0100]
-    //     );
-    // }
 }
