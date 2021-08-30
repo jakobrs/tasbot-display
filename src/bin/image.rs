@@ -20,7 +20,11 @@ struct Opts {
     #[structopt(long, help = "Enable if the image is a gif")]
     gif: bool,
 
-    #[structopt(long, default_value = "1", help = "Divides delay between frames by <speedup>")]
+    #[structopt(
+        long,
+        default_value = "1",
+        help = "Divides delay between frames by <speedup>"
+    )]
     speedup: f32,
 
     #[structopt(long, help = "Don't loop the gif")]

@@ -20,7 +20,11 @@ struct Opts {
     #[structopt(long)]
     brightness: Option<f32>,
 
-    #[structopt(long, default_value = "200", help = "Delay between steps, in milliseconds")]
+    #[structopt(
+        long,
+        default_value = "200",
+        help = "Delay between steps, in milliseconds"
+    )]
     delay: u64,
 }
 
