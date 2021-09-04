@@ -12,7 +12,10 @@ pub struct NeoPixelDevice {
 
 impl NeoPixelDevice {
     pub fn new(num_lights: u32) -> Self {
-        let bus = Bus::Spi0;
+        NeoPixelDevice::new_on_bus(num_lights, Bus::Spi0)
+    }
+
+    pub fn new_on_bus(num_lights: u32, bus: Bus) -> Self {
         let slave_select = SlaveSelect::Ss0;
         // The clock frequency of the neopixels is 800kHz, and the library
         // transmits 8 bit over spi per bit received by the neopixel.

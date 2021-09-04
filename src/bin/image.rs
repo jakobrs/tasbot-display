@@ -4,8 +4,10 @@ use std::time::Duration;
 use image::gif::GifDecoder;
 use image::io::Reader as ImageReader;
 use image::{AnimationDecoder, DynamicImage, Frame, ImageError, RgbImage};
+use rppal::spi;
 use tasbot_display::tasbot::{NUM_PIXELS, PIXEL_POSITIONS, SCREEN_HEIGHT, SCREEN_WIDTH};
-use tasbot_display::Display;
+use tasbot_display::{Display, NeoPixelDevice};
+use thiserror::Error;
 
 use structopt::StructOpt;
 
@@ -29,13 +31,37 @@ struct Opts {
 
     #[structopt(long, help = "Don't loop the gif")]
     noloop: bool,
+
+    #[structopt(long, help = "Which SPI bus to use", default_value = "0", parse(try_from_str = parse_spi_bus))]
+    bus: spi::Bus,
+}
+
+#[derive(Debug, Error)]
+enum ParseSpiBusError {
+    #[error("{0}")]
+    ParseIntError(#[from] std::num::ParseIntError),
+    #[error("bus number out of range (0-6)")]
+    OutOfRangeError,
+}
+
+fn parse_spi_bus(bus: &str) -> Result<spi::Bus, ParseSpiBusError> {
+    match bus.parse()? {
+        0 => Ok(spi::Bus::Spi0),
+        1 => Ok(spi::Bus::Spi1),
+        2 => Ok(spi::Bus::Spi2),
+        3 => Ok(spi::Bus::Spi3),
+        4 => Ok(spi::Bus::Spi4),
+        5 => Ok(spi::Bus::Spi5),
+        6 => Ok(spi::Bus::Spi6),
+        _ => Err(ParseSpiBusError::OutOfRangeError),
+    }
 }
 
 fn main() {
     let opts = Opts::from_args();
 
-    let mut display = Display::new(NUM_PIXELS);
-
+    let device = NeoPixelDevice::new_on_bus(NUM_PIXELS, opts.bus);
+    let mut display = Display::wrap(device);
     if let Some(brightness) = opts.brightness {
         display.set_brightness(brightness);
     }
