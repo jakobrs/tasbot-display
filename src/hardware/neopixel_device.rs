@@ -14,7 +14,9 @@ impl NeoPixelDevice {
     pub fn new(num_lights: u32) -> Self {
         let bus = Bus::Spi0;
         let slave_select = SlaveSelect::Ss0;
-        //let clock_speed = 3 * 1000 * 1000;
+        // The clock frequency of the neopixels is 800kHz, and the library
+        // transmits 8 bit over spi per bit received by the neopixel.
+        // So clock_speed is set to 8 * 800kHz = 6.4MHz.
         let clock_speed = 6_400_000;
         let mode = Mode::Mode0;
 
