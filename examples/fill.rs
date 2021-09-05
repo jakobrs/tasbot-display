@@ -15,6 +15,8 @@ struct Opts {
 
     #[structopt(long)]
     brightness: Option<f32>,
+    #[structopt(long)]
+    gamma: Option<f32>,
 }
 
 fn main() {
@@ -25,6 +27,9 @@ fn main() {
 
     if let Some(brightness) = opts.brightness {
         display.set_brightness(brightness);
+    }
+    if let Some(gamma) = opts.gamma {
+        display.set_gamma(gamma);
     }
 
     for i in 0..NUM_PIXELS {

@@ -19,6 +19,9 @@ struct Opts {
     #[structopt(long, help = "Brightness")]
     brightness: Option<f32>,
 
+    #[structopt(long, help = "Gamma")]
+    gamma: Option<f32>,
+
     #[structopt(long, help = "Enable if the image is a gif")]
     gif: bool,
 
@@ -64,6 +67,9 @@ fn main() {
     let mut display = Display::wrap(device);
     if let Some(brightness) = opts.brightness {
         display.set_brightness(brightness);
+    }
+    if let Some(gamma) = opts.gamma {
+        display.set_gamma(gamma);
     }
 
     if opts.gif {
