@@ -69,8 +69,8 @@ impl Display {
             .buffer
             .iter()
             .map(|&pixel| {
-                let pixel = apply_gamma(&pixel, self.gamma);
-                let pixel = scale_color(&pixel, self.brightness);
+                let pixel = apply_gamma(pixel, self.gamma);
+                let pixel = scale_color(pixel, self.brightness);
                 pixel
             })
             .collect();
@@ -95,7 +95,7 @@ impl IndexMut<usize> for Display {
     }
 }
 
-fn apply_gamma(pixel: &image::Rgb<u8>, gamma: f32) -> image::Rgb<u8> {
+fn apply_gamma(pixel: RgbColor, gamma: f32) -> image::Rgb<u8> {
     RgbColor::from([
         (((pixel[0] as f32) / 255.).powf(gamma) * 255.) as u8,
         (((pixel[1] as f32) / 255.).powf(gamma) * 255.) as u8,
@@ -103,7 +103,7 @@ fn apply_gamma(pixel: &image::Rgb<u8>, gamma: f32) -> image::Rgb<u8> {
     ])
 }
 
-fn scale_color(pixel: &RgbColor, scale: f32) -> RgbColor {
+fn scale_color(pixel: RgbColor, scale: f32) -> RgbColor {
     RgbColor::from([
         ((pixel[0] as f32) * scale) as u8,
         ((pixel[1] as f32) * scale) as u8,
