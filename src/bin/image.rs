@@ -14,6 +14,7 @@ use thiserror::Error;
 use structopt::StructOpt;
 
 #[derive(StructOpt)]
+#[structopt(setting = structopt::clap::AppSettings::DeriveDisplayOrder)]
 struct Opts {
     #[structopt(help = "Path to the image file")]
     file: String,
@@ -23,6 +24,12 @@ struct Opts {
 
     #[structopt(long, help = "Gamma")]
     gamma: Option<f32>,
+    #[structopt(long, help = "Gamma on the red channel")]
+    red_gamma: Option<f32>,
+    #[structopt(long, help = "Gamma on the green channel")]
+    green_gamma: Option<f32>,
+    #[structopt(long, help = "Gamma on the blue channel")]
+    blue_gamma: Option<f32>,
 
     #[structopt(long, help = "Enable if the image is a gif")]
     gif: bool,
@@ -72,6 +79,19 @@ fn main() {
     }
     if let Some(gamma) = opts.gamma {
         display.set_gamma(gamma);
+    }
+    {
+        let mut gamma = display.gamma().clone();
+        if let Some(red_gamma) = opts.red_gamma {
+            gamma[0] = red_gamma;
+        }
+        if let Some(green_gamma) = opts.green_gamma {
+            gamma[1] = green_gamma;
+        }
+        if let Some(blue_gamma) = opts.blue_gamma {
+            gamma[2] = blue_gamma;
+        }
+        display.set_per_channel_gamma(gamma);
     }
 
     if opts.gif {

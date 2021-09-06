@@ -8,14 +8,14 @@ const MAX_BRIGHTNESS: f32 = if cfg!(feature = "dont-cap-brightness") {
     0.1
 };
 const DEFAULT_BRIGHTNESS: f32 = 0.1;
-const DEFAULT_GAMMA: f32 = 2.;
+const DEFAULT_GAMMA: [f32; 3] = [2., 2., 2.];
 
 pub struct Display {
     device: NeoPixelDevice,
     // TODO: Split into separate pre-preprocessing and post-preprocessing buffers
     buffer: Vec<RgbColor>,
     brightness: f32,
-    gamma: f32,
+    gamma: [f32; 3],
 }
 
 impl Display {
@@ -53,7 +53,13 @@ impl Display {
     }
 
     pub fn set_gamma(&mut self, gamma: f32) {
+        self.set_per_channel_gamma([gamma; 3]);
+    }
+    pub fn set_per_channel_gamma(&mut self, gamma: [f32; 3]) {
         self.gamma = gamma;
+    }
+    pub fn gamma(&self) -> &[f32; 3] {
+        &self.gamma
     }
 
     pub fn device(&self) -> &NeoPixelDevice {
@@ -95,11 +101,11 @@ impl IndexMut<usize> for Display {
     }
 }
 
-fn apply_gamma(pixel: RgbColor, gamma: f32) -> image::Rgb<u8> {
+fn apply_gamma(pixel: RgbColor, gamma: [f32; 3]) -> image::Rgb<u8> {
     RgbColor::from([
-        (((pixel[0] as f32) / 255.).powf(gamma) * 255.) as u8,
-        (((pixel[1] as f32) / 255.).powf(gamma) * 255.) as u8,
-        (((pixel[2] as f32) / 255.).powf(gamma) * 255.) as u8,
+        (((pixel[0] as f32) / 255.).powf(gamma[0]) * 255.) as u8,
+        (((pixel[1] as f32) / 255.).powf(gamma[1]) * 255.) as u8,
+        (((pixel[2] as f32) / 255.).powf(gamma[2]) * 255.) as u8,
     ])
 }
 
