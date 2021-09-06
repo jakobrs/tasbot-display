@@ -1,12 +1,14 @@
-use std::fs::File;
-use std::time::Duration;
+use std::{fs::File, time::Duration};
 
-use image::gif::GifDecoder;
-use image::io::Reader as ImageReader;
-use image::{AnimationDecoder, DynamicImage, Frame, ImageError, RgbImage};
+use image::{
+    gif::GifDecoder, io::Reader as ImageReader, AnimationDecoder, DynamicImage, Frame, ImageError,
+    RgbImage,
+};
 use rppal::spi;
-use tasbot_display::tasbot::{NUM_PIXELS, PIXEL_POSITIONS, SCREEN_HEIGHT, SCREEN_WIDTH};
-use tasbot_display::{Display, NeoPixelDevice};
+use tasbot_display::{
+    tasbot::{NUM_PIXELS, PIXEL_POSITIONS, SCREEN_HEIGHT, SCREEN_WIDTH},
+    Display, NeoPixelDevice,
+};
 use thiserror::Error;
 
 use structopt::StructOpt;
@@ -63,7 +65,7 @@ fn parse_spi_bus(bus: &str) -> Result<spi::Bus, ParseSpiBusError> {
 fn main() {
     let opts = Opts::from_args();
 
-    let device = NeoPixelDevice::new_on_bus(NUM_PIXELS, opts.bus);
+    let device = NeoPixelDevice::new_on_bus(NUM_PIXELS, opts.bus).unwrap();
     let mut display = Display::wrap(device);
     if let Some(brightness) = opts.brightness {
         display.set_brightness(brightness);

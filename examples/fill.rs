@@ -1,5 +1,4 @@
-use tasbot_display::tasbot::NUM_PIXELS;
-use tasbot_display::{Display, RgbColor};
+use tasbot_display::{tasbot::NUM_PIXELS, Display, RgbColor};
 
 use structopt::StructOpt;
 
@@ -23,7 +22,7 @@ fn main() {
     let opts = Opts::from_args();
     let color = RgbColor::from([opts.red, opts.green, opts.blue]);
 
-    let mut display = Display::new(NUM_PIXELS);
+    let mut display = Display::new(NUM_PIXELS).unwrap();
 
     if let Some(brightness) = opts.brightness {
         display.set_brightness(brightness);

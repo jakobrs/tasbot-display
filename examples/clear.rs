@@ -1,8 +1,7 @@
-use tasbot_display::tasbot::NUM_PIXELS;
-use tasbot_display::Display;
+use tasbot_display::{tasbot::NUM_PIXELS, Display};
 
 fn main() {
-    let mut display = Display::new(NUM_PIXELS);
+    let mut display = Display::new(NUM_PIXELS).unwrap();
 
-    display.device().clear();
+    display.device_mut().clear();
 }

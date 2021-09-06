@@ -1,10 +1,8 @@
-use tasbot_display::tasbot::NUM_PIXELS;
-use tasbot_display::{Display, RgbColor};
+use tasbot_display::{tasbot::NUM_PIXELS, Display, RgbColor};
 
 use structopt::StructOpt;
 
-use std::thread;
-use std::time::Duration;
+use std::{thread, time::Duration};
 
 #[derive(StructOpt)]
 #[structopt(setting = structopt::clap::AppSettings::DeriveDisplayOrder)]
@@ -23,7 +21,7 @@ struct Opts {
 fn main() {
     let opts = Opts::from_args();
 
-    let mut display = Display::new(NUM_PIXELS);
+    let mut display = Display::new(NUM_PIXELS).unwrap();
     if let Some(brightness) = opts.brightness {
         display.set_brightness(brightness);
     }

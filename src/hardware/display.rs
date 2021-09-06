@@ -1,7 +1,6 @@
 use std::ops::{Index, IndexMut};
 
-use crate::hardware::neopixel_device::NeoPixelDevice;
-use crate::RgbColor;
+use crate::{hardware::neopixel_device::NeoPixelDevice, RgbColor};
 
 const MAX_BRIGHTNESS: f32 = if cfg!(feature = "dont-cap-brightness") {
     1.
@@ -20,16 +19,17 @@ pub struct Display {
 }
 
 impl Display {
-    pub fn new(num_lights: u32) -> Self {
+    pub fn new(num_lights: u32) -> rppal::spi::Result<Self> {
         let black = RgbColor::from([0, 0, 0]);
 
-        Self {
-            device: NeoPixelDevice::new(num_lights),
+        Ok(Self {
+            device: NeoPixelDevice::new(num_lights)?,
             buffer: vec![black; num_lights as usize],
             brightness: DEFAULT_BRIGHTNESS,
             gamma: DEFAULT_GAMMA,
-        }
+        })
     }
+
     pub fn wrap(device: NeoPixelDevice) -> Self {
         let black = RgbColor::from([0, 0, 0]);
 
@@ -56,7 +56,11 @@ impl Display {
         self.gamma = gamma;
     }
 
-    pub fn device(&mut self) -> &mut NeoPixelDevice {
+    pub fn device(&self) -> &NeoPixelDevice {
+        &self.device
+    }
+
+    pub fn device_mut(&mut self) -> &mut NeoPixelDevice {
         &mut self.device
     }
 
@@ -71,6 +75,10 @@ impl Display {
             })
             .collect();
         self.device.set_pixels(&buffer_post_brightness[..]);
+    }
+
+    pub fn get_buffer(&self) -> &[RgbColor] {
+        &self.buffer
     }
 }
 

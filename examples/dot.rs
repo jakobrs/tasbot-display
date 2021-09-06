@@ -1,5 +1,4 @@
-use std::thread;
-use std::time::Duration;
+use std::{thread, time::Duration};
 
 //use tasbot_display::tasbot::NUM_PIXELS;
 const NUM_PIXELS: u32 = 24;
@@ -33,7 +32,7 @@ fn main() {
     let color = RgbColor::from([opts.red, opts.green, opts.blue]);
     let black = RgbColor::from([0, 0, 0]);
 
-    let mut display = Display::new(NUM_PIXELS);
+    let mut display = Display::new(NUM_PIXELS).unwrap();
 
     if let Some(brightness) = opts.brightness {
         display.set_brightness(brightness);

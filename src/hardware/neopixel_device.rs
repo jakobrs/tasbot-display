@@ -1,6 +1,6 @@
 use crate::RgbColor;
 
-use rppal::spi::{Bus, Mode, SlaveSelect, Spi};
+use rppal::spi::{Bus, Mode, Result, SlaveSelect, Spi};
 
 const BITS_PER_BIT: usize = 8;
 
@@ -11,11 +11,11 @@ pub struct NeoPixelDevice {
 }
 
 impl NeoPixelDevice {
-    pub fn new(num_lights: u32) -> Self {
+    pub fn new(num_lights: u32) -> Result<Self> {
         NeoPixelDevice::new_on_bus(num_lights, Bus::Spi0)
     }
 
-    pub fn new_on_bus(num_lights: u32, bus: Bus) -> Self {
+    pub fn new_on_bus(num_lights: u32, bus: Bus) -> Result<Self> {
         let slave_select = SlaveSelect::Ss0;
         // The clock frequency of the neopixels is 800kHz, and the library
         // transmits 8 bit over spi per bit received by the neopixel.
@@ -23,13 +23,13 @@ impl NeoPixelDevice {
         let clock_speed = 6_400_000;
         let mode = Mode::Mode0;
 
-        let spi = Spi::new(bus, slave_select, clock_speed, mode).unwrap();
+        let spi = Spi::new(bus, slave_select, clock_speed, mode)?;
 
-        Self {
+        Ok(Self {
             buffer: vec![],
             spi,
             num_lights,
-        }
+        })
     }
 
     fn write(&mut self) {
@@ -56,6 +56,10 @@ impl NeoPixelDevice {
                 .flat_map(|color| [color[1], color[0], color[2]]),
         );
         self.write();
+    }
+
+    pub fn get_num_lights(&self) -> u32 {
+        self.num_lights
     }
 }
 
