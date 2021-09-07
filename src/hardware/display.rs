@@ -2,13 +2,13 @@ use std::ops::{Index, IndexMut};
 
 use crate::{hardware::neopixel_device::NeoPixelDevice, RgbColor};
 
-const MAX_BRIGHTNESS: f32 = if cfg!(feature = "dont-cap-brightness") {
+pub const MAX_BRIGHTNESS: f32 = if cfg!(feature = "dont-cap-brightness") {
     1.
 } else {
     0.1
 };
-const DEFAULT_BRIGHTNESS: f32 = 0.1;
-const DEFAULT_GAMMA: [f32; 3] = [2., 2., 2.];
+pub const DEFAULT_BRIGHTNESS: f32 = 0.1;
+pub const DEFAULT_GAMMA: [f32; 3] = [2., 2., 2.];
 
 pub struct Display {
     device: NeoPixelDevice,
@@ -52,12 +52,18 @@ impl Display {
         self.brightness = brightness;
     }
 
+    pub fn brightness(&self) -> f32 {
+        self.brightness
+    }
+
     pub fn set_gamma(&mut self, gamma: f32) {
         self.set_per_channel_gamma([gamma; 3]);
     }
+
     pub fn set_per_channel_gamma(&mut self, gamma: [f32; 3]) {
         self.gamma = gamma;
     }
+
     pub fn gamma(&self) -> &[f32; 3] {
         &self.gamma
     }
