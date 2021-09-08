@@ -1,6 +1,7 @@
 use std::ops::{Index, IndexMut};
 
 use crate::{hardware::neopixel_device::NeoPixelDevice, RgbColor};
+use log::info;
 
 pub const MAX_BRIGHTNESS: f32 = if cfg!(feature = "dont-cap-brightness") {
     1.
@@ -43,13 +44,13 @@ impl Display {
 
     pub fn set_brightness(&mut self, brightness: f32) {
         if brightness > MAX_BRIGHTNESS {
-            panic!(
+            info!(
                 "Attempted to set brightness to {}, above MAX_BRIGHTNESS of {}",
                 brightness, MAX_BRIGHTNESS
             );
         }
 
-        self.brightness = brightness;
+        self.brightness = brightness.clamp(0., MAX_BRIGHTNESS);
     }
 
     pub fn brightness(&self) -> f32 {

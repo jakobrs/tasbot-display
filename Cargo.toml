@@ -10,6 +10,7 @@ lto = true
 
 [dependencies]
 image = "0.23.14"
+log = "0.4.14"
 rppal = "0.12.0"
 structopt = "0.3.22"
 thiserror = "1.0.28"
