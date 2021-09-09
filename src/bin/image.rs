@@ -1,4 +1,7 @@
-use std::{fs::File, time::Duration};
+use std::{
+    fs::File,
+    time::{Duration, Instant},
+};
 
 use image::{
     gif::GifDecoder, io::Reader as ImageReader, AnimationDecoder, DynamicImage, Frame, ImageError,
@@ -115,12 +118,13 @@ fn main() {
 
         loop {
             for (frame, image) in frames.iter() {
+                let now = Instant::now();
+
                 draw_image(&mut display, image);
 
                 let (numer, denom) = frame.delay().numer_denom_ms();
                 let duration = Duration::from_millis(numer as u64).div_f32(opts.speedup) / denom;
-
-                std::thread::sleep(duration);
+                std::thread::sleep(duration.saturating_sub(now.elapsed()));
             }
 
             if opts.noloop {
