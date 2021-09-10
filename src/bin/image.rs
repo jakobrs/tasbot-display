@@ -1,5 +1,9 @@
 use std::{
     fs::File,
+    sync::{
+        atomic::{AtomicU64, Ordering},
+        Arc,
+    },
     time::{Duration, Instant},
 };
 
@@ -7,6 +11,7 @@ use image::{
     gif::GifDecoder, io::Reader as ImageReader, AnimationDecoder, DynamicImage, Frame, ImageError,
     RgbImage,
 };
+use log::{debug, log_enabled, Level};
 use rppal::spi;
 use tasbot_display::{
     tasbot::{NUM_PIXELS, PIXEL_POSITIONS, SCREEN_HEIGHT, SCREEN_WIDTH},
@@ -73,6 +78,8 @@ fn parse_spi_bus(bus: &str) -> Result<spi::Bus, ParseSpiBusError> {
 }
 
 fn main() {
+    env_logger::init();
+
     let opts = Opts::from_args();
 
     let device = NeoPixelDevice::new_on_bus(NUM_PIXELS, opts.bus).unwrap();
@@ -116,11 +123,36 @@ fn main() {
             .collect::<Result<Vec<(Frame, RgbImage)>, ImageError>>()
             .unwrap();
 
+        let frame_count = Arc::new(AtomicU64::new(0));
+
+        if log_enabled!(Level::Debug) {
+            let frame_count = frame_count.clone();
+            std::thread::spawn(move || {
+                let mut last_iteration = Instant::now();
+
+                loop {
+                    std::thread::sleep(Duration::from_secs(5));
+
+                    let time = last_iteration.elapsed();
+                    last_iteration = Instant::now();
+
+                    let frames_elapsed = frame_count.swap(0, Ordering::Relaxed);
+                    debug!(
+                        "{} frames / {} s = {} fps",
+                        frames_elapsed,
+                        time.as_secs_f64(),
+                        frames_elapsed as f64 / time.as_secs_f64()
+                    );
+                }
+            });
+        }
+
         loop {
             for (frame, image) in frames.iter() {
                 let now = Instant::now();
 
                 draw_image(&mut display, image);
+                frame_count.fetch_add(1, Ordering::Relaxed);
 
                 let (numer, denom) = frame.delay().numer_denom_ms();
                 let duration = Duration::from_millis(numer as u64).div_f32(opts.speedup) / denom;
