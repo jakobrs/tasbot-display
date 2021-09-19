@@ -82,8 +82,8 @@ impl Display {
             .buffer
             .iter()
             .map(|&pixel| {
-                let pixel = apply_gamma(pixel, self.gamma);
                 let pixel = scale_color(pixel, self.brightness);
+                let pixel = apply_gamma(pixel, self.gamma);
                 pixel
             })
             .collect();
