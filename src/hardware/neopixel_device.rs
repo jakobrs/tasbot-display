@@ -12,15 +12,14 @@ pub struct NeoPixelDevice {
 
 impl NeoPixelDevice {
     pub fn new(num_lights: u32) -> Result<Self> {
-        NeoPixelDevice::new_on_bus(num_lights, Bus::Spi0)
+        NeoPixelDevice::new_with(num_lights, Bus::Spi0, 6_400_00)
     }
 
-    pub fn new_on_bus(num_lights: u32, bus: Bus) -> Result<Self> {
+    pub fn new_with(num_lights: u32, bus: Bus, clock_speed: u32) -> Result<Self> {
         let slave_select = SlaveSelect::Ss0;
         // The clock frequency of the neopixels is 800kHz, and the library
         // transmits 8 bit over spi per bit received by the neopixel.
         // So clock_speed is set to 8 * 800kHz = 6.4MHz.
-        let clock_speed = 6_400_000;
         let mode = Mode::Mode0;
 
         let spi = Spi::new(bus, slave_select, clock_speed, mode)?;

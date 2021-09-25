@@ -54,6 +54,9 @@ struct Opts {
 
     #[structopt(long, help = "Which SPI bus to use", default_value = "0", parse(try_from_str = parse_spi_bus))]
     bus: spi::Bus,
+
+    #[structopt(long, help = "Clock speed", default_value = "6400000")]
+    clock_speed: u32,
 }
 
 #[derive(Debug, Error)]
@@ -82,7 +85,7 @@ fn main() {
 
     let opts = Opts::from_args();
 
-    let device = NeoPixelDevice::new_on_bus(NUM_PIXELS, opts.bus).unwrap();
+    let device = NeoPixelDevice::new_with(NUM_PIXELS, opts.bus, opts.clock_speed).unwrap();
     let mut display = Display::wrap(device);
     if let Some(brightness) = opts.brightness {
         display.set_brightness(brightness);
