@@ -11,9 +11,8 @@ Experiment in handling the TASBot display from Rust
 
 ### Compiled programs
 
-- Primary binaries
-  - `image` shows a static image on the screen, or gifs with `--gif`
 - Examples
+  - `image` shows a static image on the screen, or gifs with `--gif`
   - `fill` fills the screen with green
   - `clear` clears the screen
   - `flashes` fills the screen with red, waits, fills the screen with green, waits, in a loop
