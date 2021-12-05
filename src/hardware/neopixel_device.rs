@@ -12,7 +12,7 @@ pub struct NeoPixelDevice {
 
 impl NeoPixelDevice {
     pub fn new(num_lights: u32) -> Result<Self> {
-        NeoPixelDevice::new_with(num_lights, Bus::Spi0, 6_400_00)
+        NeoPixelDevice::new_with(num_lights, Bus::Spi0, 6_400_000)
     }
 
     pub fn new_with(num_lights: u32, bus: Bus, clock_speed: u32) -> Result<Self> {
