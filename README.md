@@ -23,3 +23,22 @@ Most programs support arguments; pass `--help` for a list of supported arguments
 ### Some notes
 
 The brightness is by default capped at 10%. To increase the default brightness, change the definition of `MAX_BRIGHTNESS` in `src/hardware/display.rs`. You can disable the cap completely using `--features dont-cap-brightness`
+
+### Compile instructions
+
+Natively:
+```bash
+RUSTFLAGS="-C target-cpu=native" cargo build [--release] --examples
+```
+
+Cross-compiling:
+```
+# Use cortex-a53 if compiling for the Pi Zero 2, arm1176jzf-s if compiling for the Pi Zero W
+RUSTFLAGS="-C target-cpu=cortex-a53 -C linker=lld" cargo build --target arm-unknown-linux-musleabihf [--release] --examples
+```
+
+Note that this assumes you have lld installed.
+
+### Things to check if things are failing
+
+- Make sure SPI is enabled in `raspi-config` (under "Interfaces")
