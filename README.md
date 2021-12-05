@@ -36,9 +36,15 @@ Cross-compiling:
 # Use cortex-a53 if compiling for the Pi Zero 2, arm1176jzf-s if compiling for the Pi Zero W
 RUSTFLAGS="-C target-cpu=cortex-a53 -C linker=lld" cargo build --target arm-unknown-linux-musleabihf [--release] --examples
 ```
-
 Note that this assumes you have lld installed.
 
-### Things to check if things are failing
+### Creating tar.gz file
 
+```bash
+./package.sh <debug or release> [optional tag to be added to file name]
+```
+
+### Setting up your Pi
+
+- GPIO 10 (SPI0 MOSI) is used for communication
 - Make sure SPI is enabled in `raspi-config` (under "Interfaces")
