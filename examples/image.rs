@@ -83,6 +83,8 @@ fn parse_spi_bus(bus: &str) -> Result<spi::Bus, ParseSpiBusError> {
 fn main() {
     env_logger::init();
 
+    log::trace!("Commit: {}", &env!("GIT_HASH")[..10]);
+
     let opts = Opts::from_args();
 
     let device = NeoPixelDevice::new_with(NUM_PIXELS, opts.bus, opts.clock_speed).unwrap();
